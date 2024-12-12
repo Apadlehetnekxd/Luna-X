@@ -1,0 +1,100 @@
+<html lang="hu">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Luna X App - Letöltés</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .fade-out {
+            animation: fadeOut 3s ease-in-out;
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        .hover-smooth:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s ease-in-out;
+        }
+        .hover-blur:hover {
+            filter: blur(2px);
+            transition: filter 0.5s ease-in-out;
+        }
+        .hover-move:hover {
+            transform: translateY(-10px);
+            transition: transform 0.5s ease-in-out;
+        }
+        .neon-text {
+            color: #d946ef;
+            text-shadow: 0 0 3px #d946ef, 0 0 6px #d946ef, 0 0 12px #d946ef, 0 0 24px #d946ef, 0 0 48px #d946ef;
+        }
+        .hidden {
+            display: none;
+        }
+        .parallax {
+            transition: transform 0.1s ease-out;
+        }
+        .github-icon {
+            transition: transform 0.5s ease-in-out;
+        }
+        .github-icon:hover {
+            transform: rotate(360deg);
+        }
+    </style>
+</head>
+<body class="bg-black text-white flex items-center justify-center min-h-screen relative">
+    <a class="absolute top-4 right-4" href="https://github.com/Apadlehetnekxd/Luna-X" target="_blank">
+        <img alt="GitHub logo" class="hover-smooth github-icon" height="40" src="https://storage.googleapis.com/a1aa/image/C9l58e85W2UlS6CbSqU2ditXANQ2y39K4q7mDTzC4I3VQH9JA.jpg" width="40"/>
+    </a>
+    <div class="text-center fade-in" id="welcome-container">
+        <h1 id="welcome-text" class="text-5xl font-bold mb-8 neon-text">Welcome to Luna X</h1>
+    </div>
+    <div class="text-center hidden parallax" id="parallax-container">
+        <div id="download-section">
+            <h1 class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Download Luna X App</h1>
+            <a class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded inline-flex items-center hover-smooth hover-move" href="https://github.com/Apadlehetnekxd/Luna-X/releases/download/LunaX/LunaX.7z" target="_blank">
+                <i class="fas fa-download mr-2"></i>
+                Download
+            </a>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('welcome-text').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('welcome-container').classList.add('hidden');
+                document.getElementById('parallax-container').classList.remove('hidden');
+                document.getElementById('parallax-container').classList.add('fade-in');
+            }, 3000);
+        }, 5000);
+
+        document.addEventListener('mousemove', (e) => {
+            const parallaxContainer = document.getElementById('parallax-container');
+            const speed = 0.05;
+            const x = (window.innerWidth / 2 - e.pageX) * speed;
+            const y = (window.innerHeight / 2 - e.pageY) * speed;
+            parallaxContainer.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>
