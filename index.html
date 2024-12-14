@@ -2,90 +2,190 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Luna X </title>
+    <title>Luna X</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
         }
         .fade-in {
-            animation: fadeIn 3s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            animation: fadeIn 2s ease-in-out;
         }
         .fade-out {
-            animation: fadeOut 3s ease-in-out;
-        }
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-        .hover-smooth:hover {
-            transform: scale(1.05);
-            transition: transform 0.5s ease-in-out;
+            animation: fadeOut 2s ease-in-out;
         }
         .hover-blur:hover {
             filter: blur(2px);
-            transition: filter 0.5s ease-in-out;
+        }
+        .hover-smooth {
+            transition: all 0.3s ease-in-out;
         }
         .hover-move:hover {
-            transform: translateY(-10px);
-            transition: transform 0.5s ease-in-out;
+            transform: translateY(-5px);
         }
-        .neon-text {
-            color: #d946ef;
-            text-shadow: 0 0 3px #d946ef, 0 0 6px #d946ef, 0 0 12px #d946ef, 0 0 24px #d946ef, 0 0 48px #d946ef;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        .hidden {
-            display: none;
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
-        .parallax {
-            transition: transform 0.1s ease-out;
+        @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
         }
-        .github-icon {
-            transition: transform 0.5s ease-in-out;
-        }
-        .github-icon:hover {
-            transform: rotate(360deg);
+        .flash {
+            animation: flash 0.5s ease-in-out;
         }
     </style>
 </head>
-<body class="bg-black text-white flex items-center justify-center min-h-screen relative">
-    <a class="absolute top-4 right-4" href="https://github.com/Apadlehetnekxd/Luna-X" target="_blank">
-        <img alt="GitHub logo" class="hover-smooth github-icon" height="40" src="https://storage.googleapis.com/a1aa/image/C9l58e85W2UlS6CbSqU2ditXANQ2y39K4q7mDTzC4I3VQH9JA.jpg" width="40"/>
-    </a>
-    <div class="text-center fade-in" id="welcome-container">
-        <h1 id="welcome-text" class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Welcome to Luna X</h1>
-    </div>
-    <div class="text-center hidden parallax" id="parallax-container">
-        <div id="download-section">
-            <h1 class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Download Luna X App</h1>
-            <a class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded inline-flex items-center hover-smooth hover-move" href="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.7z" target="_blank">
-                <i class="fas fa-download mr-2"></i>
-                Download
-            </a>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="content flex items-center justify-center min-h-screen relative">
+        <a class="absolute top-4 right-4" href="https://github.com/Apadlehetnekxd/Luna-X" target="_blank">
+            <i class="fab fa-github text-white text-4xl hover-smooth" id="github-icon"></i>
+        </a>
+        <div class="text-center fade-in" id="welcome-container">
+            <h1 id="welcome-text" class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Welcome to Luna X</h1>
+        </div>
+        <div class="text-center hidden parallax" id="parallax-container">
+            <div id="download-section">
+                <h1 class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Download Luna X App</h1>
+                <a class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded inline-flex items-center hover-smooth hover-move" href="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.7z" target="_blank">
+                    <i class="fas fa-download mr-2"></i>
+                    Download
+                </a>
+            </div>
         </div>
     </div>
+    
     <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particlesArray = [];
+        const numberOfParticles = 150;
+
+        const mouse = {
+            x: null,
+            y: null,
+            radius: 100
+        };
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 4 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = Math.random() * 30 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.history = [];
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y < 0 || this.y > canvas.height) {
+                    this.speedY = -this.speedY;
+                }
+
+                // Check collision with mouse
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    let angle = Math.atan2(dy, dx);
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    let directionX = Math.cos(angle) * force * this.density;
+                    let directionY = Math.sin(angle) * force * this.density;
+                    this.x -= directionX;
+                    this.y -= directionY;
+                }
+
+                // Add current position to history
+                this.history.push({ x: this.x, y: this.y });
+                if (this.history.length > 10) {
+                    this.history.shift();
+                }
+            }
+            draw() {
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+
+                // Draw trail
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                for (let i = 0; i < this.history.length - 1; i++) {
+                    ctx.moveTo(this.history[i].x, this.history[i].y);
+                    ctx.lineTo(this.history[i + 1].x, this.history[i + 1].y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particlesArray.length = 0;
+            init();
+        });
+
         setTimeout(() => {
             document.getElementById('welcome-text').classList.add('fade-out');
             setTimeout(() => {
                 document.getElementById('welcome-container').classList.add('hidden');
                 document.getElementById('parallax-container').classList.remove('hidden');
                 document.getElementById('parallax-container').classList.add('fade-in');
-            }, 3000);
+            }, 2000);
         }, 5000);
 
         document.addEventListener('mousemove', (e) => {
@@ -95,6 +195,17 @@
             const y = (window.innerHeight / 2 - e.pageY) * speed;
             parallaxContainer.style.transform = `translate(${x}px, ${y}px)`;
         });
+
+        document.getElementById('github-icon').addEventListener('mouseover', () => {
+            document.getElementById('github-icon').classList.add('flash');
+        });
+
+        document.getElementById('github-icon').addEventListener('animationend', () => {
+            document.getElementById('github-icon').classList.remove('flash');
+        });
+
+        init();
+        animate();
     </script>
 </body>
 </html>
