@@ -1,211 +1,227 @@
-<html lang="hu">
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luna X</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: black;
-            color: white;
-            margin: 0;
-            overflow: hidden;
+    <link rel="icon" href="static/images/tab_icon.png" sizes="512x512" type="image/png">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        @font-face {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: 400;
+            src: url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            font-display: swap;
         }
-        canvas {
-            position: absolute;
+
+        @font-face {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: 400;
+            src: url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);
+            unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: 400;
+            src: url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);
+            unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF;
+            font-display: swap;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Horizontális középre igazítás */
+            justify-content: center; /* Függőleges középre igazítás */
+            height: 100vh; /* Magasság beállítása a középre igazításhoz */
+            text-align: center; /* Szöveg középre igazítása */
+            position: relative; /* Pozíció beállítása a gombhoz */
+            z-index: 10; /* Z-index beállítása, hogy a gomb a háttér előtt legyen */
+            opacity: 0; /* Kezdetben láthatatlan */
+            animation: fadeIn 1s forwards; /* Fade-in animáció */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Canvas setup and initialization */
+        #starsCanvas {
+            position: fixed;
             top: 0;
             left: 0;
-            z-index: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Háttérként */
         }
-        .content {
-            position: relative;
-            z-index: 1;
+
+        /* Button Styles */
+        .button_custom {
+            background-color: rgba(145, 123, 155, 0.1);
+            color: #fff;
+            padding: 0.65rem;
+            border-radius: 0.5rem;
+            border: 1px solid #9e7b9b;
+            transition: background-color 0.3 s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 180px;
+            margin-top: 20px;
         }
-        .fade-in {
-            animation: fadeIn 2s ease-in-out;
-        }
-        .fade-out {
-            animation: fadeOut 2s ease-in-out;
-        }
-        .hover-blur:hover {
-            filter: blur(2px);
-        }
-        .hover-smooth {
-            transition: all 0.3s ease-in-out;
-        }
-        .hover-move:hover {
-            transform: translateY(-5px);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        @keyframes flash {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        .flash {
-            animation: flash 0.5s ease-in-out;
+
+        .button_custom:hover {
+            background-color: rgba(145, 123, 155, 0.3);
+            transform: scale(1.05);
         }
     </style>
 </head>
-<body>
-    <canvas id="canvas"></canvas>
-    <div class="content flex items-center justify-center min-h-screen relative">
-        <a class="absolute top-4 right-4" href="https://github.com/Apadlehetnekxd/Luna-X" target="_blank">
-            <i class="fab fa-github text-white text-4xl hover-smooth" id="github-icon"></i>
-        </a>
-        <div class="text-center fade-in" id="welcome-container">
-            <h1 id="welcome-text" class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Welcome to Luna X</h1>
-        </div>
-        <div class="text-center hidden parallax" id="parallax-container">
-            <div id="download-section">
-                <h1 class="text-5xl font-bold mb-8 text-purple-500 hover-blur">Download Luna X App</h1>
-                <a class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded inline-flex items-center hover-smooth hover-move" href="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.zip" target="_blank">
-                    <i class="fas fa-download mr-2"></i>
-                    Download
-                </a>
+
+<body class="dark:bg-[#19151c] bg-gray-100 transition-colors select-none text-white font-['Poppins', sans-serif]">
+    <div style="position:relative;z-index:10">
+        <main class="flex items-center justify-center h-screen px-4 md:px-8 flex-col">
+            <div class="text-center max-w-full md:max-w-4xl content">
+                <h1 class="text-4xl md:text-6xl font-bold mx-auto mb-3 md:mb-6">
+                    <span class="text-[#e1e1e1]">Luna<span class="text-[#666771]"> X</span></span>
+                </h1>
+                <p class="text-base md:text-xl mt-4 text-[#858489]">A wonderful software with which you can "hack" any network and more :D</p>
+                <div class="mt-8 flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
+                    <a href="#" class="button_custom" aria-label="Get Luna X" rel="noopener noreferrer" target="_blank">
+                        Get Luna X
+                        <svg xmlns="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.zip" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="w-4 h-4 ml-2">
+                            <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path>
+                        </svg>
+                    </a>
+                </div>
             </div>
-        </div>
+        </main>
+        <footer class="text-center" style="bottom:0;position: sticky;">
+            <!-- Footer content can be added here -->
+        </footer>
     </div>
-    
+    <canvas id="starsCanvas" style="position: fixed; top: 0; z-index: 0;" width="1900" height="900"></canvas>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+    <script src="static/js/sweetalert2.min.js" type="text/javascript"></script>
+    <script src="static/js/script.js" type="text/javascript"></script>
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById("starsCanvas");
+        const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const particlesArray = [];
-        const numberOfParticles = 150;
+        // Cache canvas dimensions
+        let canvasWidth = canvas.width;
+        let canvasHeight = canvas.height;
 
-        const mouse = {
-            x: null,
-            y: null,
-            radius: 100
-        };
+        // Star animation configuration
+        const stars = [];
+        const numStars = 200;
+        const mouseRepulsionRadius = 100;
+        let mouseX = null;
+        let mouseY = null;
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 4 + 1;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.density = Math.random() * 30 + 1;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.history = [];
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0 || this.x > canvas.width) {
-                    this.speedX = -this.speedX;
-                }
-                if (this.y < 0 || this.y > canvas.height) {
-                    this.speedY = -this.speedY;
-                }
-
-                // Check collision with mouse
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    let angle = Math.atan2(dy, dx);
-                    let force = (mouse.radius - distance) / mouse.radius;
-                    let directionX = Math.cos(angle) * force * this.density;
-                    let directionY = Math.sin(angle) * force * this.density;
-                    this.x -= directionX;
-                    this.y -= directionY;
-                }
-
-                // Add current position to history
-                this.history.push({ x: this.x, y: this.y });
-                if (this.history.length > 10) {
-                    this.history.shift();
-                }
-            }
-            draw() {
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
-
-                // Draw trail
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-                ctx.beginPath();
-                for (let i = 0; i < this.history.length - 1; i++) {
-                    ctx.moveTo(this.history[i].x, this.history[i].y);
-                    ctx.lineTo(this.history[i + 1].x, this.history[i + 1].y);
-                }
-                ctx.stroke();
-            }
-        }
-
-        function init() {
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particlesArray.forEach(particle => {
-                particle.update();
-                particle.draw();
+        // Initialize stars with random positions and velocities
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 2 + 1,
+                velocityX: (Math.random() - 0.5) * 0.5,
+                velocityY: (Math.random() - 0.5) * 0.5,
             });
+        }
+
+        // Mouse movement tracking
+        window.addEventListener("mousemove", (event) => {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        });
+
+        // Reset mouse position when cursor leaves window
+        window.addEventListener("mouseleave", () => {
+            mouseX = null;
+            mouseY = null;
+        });
+
+        // Disable right-click context menu on the entire document
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Update canvas size and reposition stars on window resize
+        window.addEventListener('resize', () => {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            stars.forEach((star) => {
+                star.x = Math.random() * canvasWidth;
+                star.y = Math.random() * canvasHeight;
+            });
+        });
+
+        // Main animation loop for stars
+        function animate() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            stars.forEach((star) => {
+                // Update star positions
+                star.x += star.velocityX;
+                star.y += star.velocityY;
+
+                // Wrap stars around screen edges
+                if (star.x < 0) star.x = canvasWidth;
+                if (star.x > canvasWidth) star.x = 0;
+                if (star.y < 0) star.y = canvasHeight;
+                if (star.y > canvasHeight) star.y = 0;
+
+                // Mouse repulsion effect
+                if (mouseX !== null && mouseY !== null) {
+                    const dx = star.x - mouseX;
+                    const dy = star.y - mouseY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < mouseRepulsionRadius) {
+                        const angle = Math.atan2(dy, dx);
+                        const force = (mouseRepulsionRadius - distance) / mouseRepulsionRadius;
+                        star.x += Math.cos(angle) * force * 5;
+                        star.y += Math.sin(angle) * force * 5;
+                    }
+                }
+
+                // Draw star
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = "white";
+                ctx.fill();
+            });
+
             requestAnimationFrame(animate);
         }
 
-        window.addEventListener('mousemove', function(event) {
-            mouse.x = event.x;
-            mouse.y = event.y;
-        });
-
-        window.addEventListener('resize', function() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particlesArray.length = 0;
-            init();
-        });
-
-        setTimeout(() => {
-            document.getElementById('welcome-text').classList.add('fade-out');
-            setTimeout(() => {
-                document.getElementById('welcome-container').classList.add('hidden');
-                document.getElementById('parallax-container').classList.remove('hidden');
-                document.getElementById('parallax-container').classList.add('fade-in');
-            }, 2000);
-        }, 5000);
-
-        document.addEventListener('mousemove', (e) => {
-            const parallaxContainer = document.getElementById('parallax-container');
-            const speed = 0.05;
-            const x = (window.innerWidth / 2 - e.pageX) * speed;
-            const y = (window.innerHeight / 2 - e.pageY) * speed;
-            parallaxContainer.style.transform = `translate(${x}px, ${y}px)`;
-        });
-
-        document.getElementById('github-icon').addEventListener('mouseover', () => {
-            document.getElementById('github-icon').classList.add('flash');
-        });
-
-        document.getElementById('github-icon').addEventListener('animationend', () => {
-            document.getElementById('github-icon').classList.remove('flash');
-        });
-
-        init();
+        // Start animation
         animate();
     </script>
 </body>
+
 </html>
