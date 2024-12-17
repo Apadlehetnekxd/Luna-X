@@ -10,91 +10,251 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.22/dist/full.min.css" rel="stylesheet" type="text/css" />
       <link rel="icon" type="image/x-icon" href="LunaX.ico">
     <style type="text/css">
-        @font-face {
-            font-family: Poppins;
-            font-style: normal;
-            font-weight: 400;
-            src: url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-            font-display: swap;
-        }
 
-        @font-face {
-            font-family: Poppins;
-            font-style: normal;
-            font-weight: 400;
-            src: url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);
-            unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-            font-display: swap;
-        }
+/*
+CSS @property and the New Style
+https://ryanmulligan.dev/blog/css-property-new-style/
+*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,500&display=swap");
 
-        @font-face {
-            font-family: Poppins;
-            font-style: normal;
-            font-weight: 400;
-            src: url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);
-            unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF;
-            font-display: swap;
-        }
+:root {
+  --shiny-cta-bg:  #19151c;
+  --shiny-cta-bg-subtle: #000000;
+  --shiny-cta-fg: #ffffff;
+  --shiny-cta-highlight: #C09BD8;
+  --shiny-cta-highlight-subtle: #854798;
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            transition: background-color 0.3s ease;
-        }
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 
-        .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Horizontális középre igazítás */
-            justify-content: center; /* Függőleges középre igazítás */
-            height: 100vh; /* Magasság beállítása a középre igazításhoz */
-            text-align: center; /* Szöveg középre igazítása */
-            position: relative; /* Pozíció beállítása a gombhoz */
-            z-index: 10; /* Z-index beállítása, hogy a gomb a háttér előtt legyen */
-            opacity: 0; /* Kezdetben láthatatlan */
-            animation: fadeIn 1s forwards; /* Fade-in animáció */
-        }
+@property --gradient-angle-offset {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+@property --gradient-percent {
+  syntax: "<percentage>";
+  initial-value: 5%;
+  inherits: false;
+}
 
-        /* Canvas setup and initialization */
-        #starsCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; /* Háttérként */
-        }
+@property --gradient-shine {
+  syntax: "<color>";
+  initial-value: white;
+  inherits: false;
+}
 
-        /* Button Styles */
-        .button_custom {
-            background-color: rgba(145, 123, 155, 0.1);
-            color: #fff;
-            padding: 0.65rem;
-            border-radius: 0.5rem;
-            border: 1px solid #9e7b9b;
-            transition: background-color 0.3 s ease, transform 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 180px;
-            margin-top: 20px;
-        }
+.shiny-cta {
+  --animation: gradient-angle linear infinite;
+  --duration: 3s;
+  --shadow-size: 2px;
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  outline-offset: 4px;
+  padding: 1.25rem 2.5rem;
+  font-family: inherit;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  border-radius: 360px;
+  color: var(--shiny-cta-fg);
+  background: linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg))
+      padding-box,
+    conic-gradient(
+        from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+        transparent,
+        var(--shiny-cta-highlight) var(--gradient-percent),
+        var(--gradient-shine) calc(var(--gradient-percent) * 2),
+        var(--shiny-cta-highlight) calc(var(--gradient-percent) * 3),
+        transparent calc(var(--gradient-percent) * 4)
+      )
+      border-box;
+  box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
 
-        .button_custom:hover {
-            background-color: rgba(145, 123, 155, 0.3);
-            transform: scale(1.05);
-        }
+  &::before,
+  &::after,
+  span::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    translate: -50% -50%;
+    z-index: -1;
+  }
+
+  &:active {
+    translate: 0 1px;
+  }
+}
+
+/* Dots pattern */
+.shiny-cta::before {
+  --size: calc(100% - var(--shadow-size) * 3);
+  --position: 2px;
+  --space: calc(var(--position) * 2);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(
+      circle at var(--position) var(--position),
+      white calc(var(--position) / 4),
+      transparent 0
+    )
+    padding-box;
+  background-size: var(--space) var(--space);
+  background-repeat: space;
+  -webkit-mask-image: conic-gradient(
+    from calc(var(--gradient-angle) + 45deg),
+    black,
+    transparent 10% 90%,
+    black
+  );
+          mask-image: conic-gradient(
+    from calc(var(--gradient-angle) + 45deg),
+    black,
+    transparent 10% 90%,
+    black
+  );
+  border-radius: inherit;
+  opacity: 0.4;
+  z-index: -1;
+}
+
+/* Inner shimmer */
+.shiny-cta::after {
+  --animation: shimmer linear infinite;
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(
+    -50deg,
+    transparent,
+    var(--shiny-cta-highlight),
+    transparent
+  );
+  -webkit-mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+          mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+  opacity: 0.6;
+}
+
+.shiny-cta span {
+  z-index: 1;
+
+  &::before {
+    --size: calc(100% + 1rem);
+    width: var(--size);
+    height: var(--size);
+    box-shadow: inset 0 -1ex 2rem 4px var(--shiny-cta-highlight);
+    opacity: 0;
+  }
+}
+
+/* Animate */
+.shiny-cta {
+  --transition: 800ms cubic-bezier(0.25, 1, 0.5, 1);
+  transition: var(--transition);
+  transition-property: --gradient-angle-offset, --gradient-percent,
+    --gradient-shine;
+
+  &,
+  &::before,
+  &::after {
+    animation: var(--animation) var(--duration),
+      var(--animation) calc(var(--duration) / 0.4) reverse paused;
+    animation-composition: add;
+  }
+
+  span::before {
+    transition: opacity var(--transition);
+    -webkit-animation: calc(var(--duration) * 1.5) breathe linear infinite;
+            animation: calc(var(--duration) * 1.5) breathe linear infinite;
+  }
+}
+
+.shiny-cta:is(:hover, :focus-visible) {
+  --gradient-percent: 20%;
+  --gradient-angle-offset: 95deg;
+  --gradient-shine: var(--shiny-cta-highlight-subtle);
+
+  &,
+  &::before,
+  &::after {
+    -webkit-animation-play-state: running;
+            animation-play-state: running;
+  }
+
+  span::before {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes gradient-angle {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+@keyframes gradient-angle {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+@-webkit-keyframes shimmer {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@-webkit-keyframes breathe {
+  from,
+  to {
+    scale: 1;
+  }
+  50% {
+    scale: 1.2;
+  }
+}
+
+@keyframes breathe {
+  from,
+  to {
+    scale: 1;
+  }
+  50% {
+    scale: 1.2;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  color: white;
+  background: #02040c;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
     </style>
 </head>
 
@@ -106,16 +266,17 @@
                     <span class="text-[#e1e1e1]">Luna<span class="text-[#666771]"> X</span></span>
                 </h1>
                 <p class="text-base md:text-xl mt-4 text-[#858489]">A wonderful software with which you can "hack" any network and more :D</p>
-                <div class="mt-8 flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
-                    <a href="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.zip" 
-   class="button_custom text-white rounded-xl" 
-   aria-label="Get Luna X" 
-   rel="noopener noreferrer" 
-   target="_blank">
-   Get Luna X
-   <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="w-4 h-4 ml-2">
-       <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path>
-   </svg>
+                <button class="shiny-cta" onclick="window.open('https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.zip', '_blank')">
+                    <span>Get Luna X</span>
+                </button>
+                
+                    
+                    
+                  
+                  
+                  
+                  
+            
 </a>
 
                 </div>
