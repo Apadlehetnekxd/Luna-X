@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -8,7 +7,8 @@
     <link rel="icon" href="static/images/tab_icon.png" sizes="512x512" type="image/png">
     <link rel="stylesheet" href="static/css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.22/dist/full.min.css" rel="stylesheet" type="text/css" />
-      <link rel="icon" type="image/x-icon" href="LunaX.ico">
+    <link rel="icon" type="image/x-icon" href="LunaX.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style type="text/css">
         @font-face {
             font-family: Poppins;
@@ -47,43 +47,42 @@
         .content {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Horizontális középre igazítás */
-            justify-content: center; /* Függőleges középre igazítás */
-            height: 100vh; /* Magasság beállítása a középre igazításhoz */
-            text-align: center; /* Szöveg középre igazítása */
-            position: relative; /* Pozíció beállítása a gombhoz */
-            z-index: 10; /* Z-index beállítása, hogy a gomb a háttér előtt legyen */
-            opacity: 0; /* Kezdetben láthatatlan */
-            animation: fadeIn 1s forwards; /* Fade-in animáció */
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
 
-        /* Canvas setup and initialization */
         #starsCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Háttérként */
+            z-index: 0;
         }
 
-        /* Button Styles */
         .button_custom {
             background-color: rgba(145, 123, 155, 0.1);
             color: #fff;
             padding: 0.65rem;
             border-radius: 0.5rem;
             border: 1px solid #9e7b9b;
-            transition: background-color 0.3 s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -95,11 +94,37 @@
             background-color: rgba(145, 123, 155, 0.3);
             transform: scale(1.05);
         }
+
+        .social-icons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #9e7b9b;
+        }
     </style>
 </head>
 
 <body class="dark:bg-[#19151c] bg-gray-100 transition-colors select-none text-white font-['Poppins', sans-serif]">
     <div style="position:relative;z-index:10">
+        <div class="social-icons">
+            <a href="https://github.com/Apadlehetnekxd/Luna_X" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://discord.gg/VeJhUSFCtE" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+                <i class="fab fa-discord"></i>
+            </a>
+        </div>
         <main class="flex items-center justify-center h-screen px-4 md:px-8 flex-col">
             <div class="text-center max-w-full md:max-w-4xl content">
                 <h1 class="text-4xl md:text-6xl font-bold mx-auto mb-3 md:mb-6">
@@ -107,17 +132,12 @@
                 </h1>
                 <p class="text-base md:text-xl mt-4 text-[#858489]">A wonderful software with which you can "hack" any network and more :D</p>
                 <div class="mt-8 flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
-                    <a href="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.zip" 
-   class="button_custom text-white rounded-xl" 
-   aria-label="Get Luna X" 
-   rel="noopener noreferrer" 
-   target="_blank">
-   Get Luna X
-   <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="w-4 h-4 ml-2">
-       <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path>
-   </svg>
-</a>
-
+                    <a href="https://github.com/Apadlehetnekxd/Luna_X/releases/download/LUNA/Luna.X.zip" class="button_custom text-white rounded-xl" aria-label="Get Luna X" rel="noopener noreferrer" target="_blank">
+                        Get Luna X
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="w-4 h-4 ml-2">
+                            <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </main>
